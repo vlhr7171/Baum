@@ -1,0 +1,119 @@
+/* Styles für Section */
+
+.btn {
+  padding-bottom: 0.25rem;
+  --bs-btn-padding-x: 0.5rem;
+  --bs-btn-font-size: 0.75rem;
+}
+
+.legend {
+  display: flex;
+}
+
+.btn-group {
+  width: 12px;
+  height: 40px;
+}
+
+.moreinfo-menu .btn-group .btn-primary {
+  min-width: 200px; /* Задает минимальную ширину кнопок */
+	font-size: 13px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Темно-синий цвет при наведении */
+  color: #fff; /* Белый текст при наведении */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Легкая тень */
+  transform: translateY(-2px); /* Легкий подъем */
+  transition: all 0.3s ease; /* Плавный переход */
+  transform: scale(1.05); /* Увеличение до 105% */
+}
+
+.dropdown-menu {
+  background: linear-gradient(90deg, #00009c 0%, #000000 100%);
+}
+
+
+
+/* Отключаем изменение цвета фона и текста при наведении на элементы выпадающего меню */
+.dropdown-menu .dropdown-item:hover {
+  background-color: inherit; /* Устанавливаем фон как родительский (исходный) */
+  color: aquamarine; /* Оставляем цвет текста исходным */
+
+
+/* Можно также задать конкретный цвет, если хотите, например: */
+
+  /* background-color: #00009c;  
+  color: aquamarine; */
+
+  transform: scale(1.05);
+  border-radius: 5px;
+}
+.dropdown-menu .dropdown-item {
+  color: aquamarine;
+  min-width: 100px;
+  /* background:linear-gradient(270deg, #00009c 0%, #000000 100%);   */
+}
+
+.person-card {
+  background: linear-gradient(270deg, #00009c 0%, #000000 100%);
+}
+
+.person-name {
+  font-size: 30px;
+  text-align: center;
+}
+
+.birthday {
+  font-size: 25px;
+}
+
+.person-biography {
+  font-size: 20px;
+}
+
+.uniform-width {
+  min-width: 150px;
+}
+
+/* Styles für Footer */
+
+footer {
+  margin-top: auto;
+  padding: 20px 0;
+  color: #fff;
+}
+
+.footer-text {
+  color: aquamarine;
+  margin: auto auto;
+}
+
+footer,
+.btn-outline-primary {
+  background: linear-gradient(270deg, #00009c 0%, #000000 100%);
+}
+
+.media-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Делаем индикаторы круглыми точками и уменьшаем их размер */
+.carousel-indicators [data-bs-target] {
+  width: 10px; /* Ширина индикатора */
+  height: 10px; /* Высота индикатора */
+  border-radius: 50%; /* Делаем индикаторы круглыми */
+  background-color: #888888; /* Цвет индикаторов в неактивном состоянии */
+}
+
+/* Изменение цвета активного индикатора */
+.carousel-indicators .active {
+  background-color: #3a34ee; /* Цвет активного индикатора */
+}
+
+/* Для более темного фона индикаторов */
+.carousel {
+  background-color: #333333;
+}
