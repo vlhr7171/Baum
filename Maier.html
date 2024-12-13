@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./source/style/reset.css" />
+    <link rel="stylesheet" href="./source/style/test1.css" />
+  </head>
+  <body>
+    <div class="example">
+      <ul id="nav">
+        <li><a href="./index.html">Главная</a></li>
+        <li>
+          <a href="./Hermann.html">Герман</a>
+        </li>
+        <li>
+          <a href="./Maier.html">Майер</a>
+          
+        </li>
+        <li><a href="./Vladimir.html">Обо мне</a></li>
+      </ul>
+    </div>
+    <!-- Всплывающее окно для информации об узле -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <div id="node-info">
+      <!-- Кнопка закрытия -->
+      <button
+        onclick="closeNodeInfo()"
+        style="
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+          color: #666;
+        "
+      >
+        X
+      </button>
+
+      <!-- Имя узла -->
+      <h2 id="node-name"></h2>
+
+      <!-- Карусель для изображений -->
+      <div id="carousel" style="margin-bottom: 20px">
+        <button id="prev-btn" onclick="showPrevImage()">‹</button>
+        <img
+          id="node-image"
+          src=""
+          alt="Фото"
+          style="width: 50%; height: auto; display: block; margin-bottom: 10px"
+        />
+        <button id="next-btn" onclick="showNextImage()">›</button>
+      </div>
+
+      <!-- Большое изображение (модальное окно) -->
+      <div
+        id="large-image-container"
+        style="
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          border: 1px solid #ddd;
+          display: none;
+          z-index: 1000;
+        "
+      >
+        <button
+          onclick="closeLargeImage()"
+          style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+          "
+        >
+          X
+        </button>
+        <img
+          id="large-image"
+          src=""
+          alt="Большое изображение"
+          style="max-width: 100%; max-height: 80vh; display: block"
+        />
+      </div>
+
+      <!-- Подробная информация -->
+      <p id="node-details"></p>
+
+      <!-- Ссылки на PDF -->
+      <div id="node-pdf" style="margin-top: 20px">
+        <!-- Здесь будут динамически добавляться ссылки на PDF -->
+      </div>
+    </div>
+
+    <section>
+      <script src="https://d3js.org/d3.v6.min.js"></script>
+      <script>
+        // Структура данных
+        const data = {
+          name: "????",
+          children: [
+            {
+              name: "Bartholomeus", 
+              children: [
+                {
+                  name: "Nikolaus Maier", 
+                  children: [
+                    {
+                      name: "Margaretha Maier (Sander)",
+                    },
+                    {
+                      name: "Katharina Maier",
+                    },
+                    {
+                      name: "Johannes Maier",
+                    },
+                    {
+                      name: "Gertrude Maier",
+                    },
+                    {
+                      name: "Peter Maier",
+                      children: [
+                        {
+                          name: "Simon Maier",
+                          children: [
+                            {
+                              name: "Ewald Maier (Simon)",
+                              children: [
+                                {
+                                  name: "Eugenia Maier",
+                                  children: [
+                                    {
+                                      name: "Igor Maier",
+                                    },
+                                    {
+                                      name: "Eugen Maier",
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Olga Maier",
+                                  children: [
+                                    {
+                                      name: "Linda Maier",
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              name: "Viktor Maier (Simon)",
+                              children: [
+                                {
+                                  name: "Jurij Maier",
+                                  children: [
+                                    {
+                                      name: "Igor Maier",
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Ludmila Maier (Klassen)",
+                                  children: [
+                                    {
+                                      name: "Andreij Klassen",
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              name: "Waldemar Maier (Simon)",
+                            },
+                            {
+                              name: "Erika Maier (Simon)",
+                            },
+                            {
+                              name: "Artur Maier (Simon)",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Marta Maier (Hunger)",
+                          children: [
+                            {
+                              name: "Adolf Hunger",
+                            },
+                            {
+                              name: "Maria Hunger",
+                            },
+                            {
+                              name: "Peter Hunger",
+                            },
+                            {
+                              name: "Ewald Hunger",
+                            },
+                            {
+                              name: "Elvira Hunger ()",
+                            },
+                            {
+                              name: "Erna Hunger",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Peter Maier (Peter)",
+                          children: [
+                            {
+                              name: "Reinhold Maier (Peter)",
+                              children: [
+                                {
+                                  name: "Viktor Maier (Reinhold)",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Ewald Maier (Peter)",
+                            },
+                            {
+                              name: "Frieda Maier (Podkolzina)",
+                              children: [
+                                {
+                                  name: "Igor  ",
+                                },
+                                {
+                                  name: "Valentina",
+                                },
+                                {
+                                  name: "Anastasia Soldatowa",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Waldemar Maier (Peter)",
+                              children: [
+                                {
+                                  name: "Elena Maier",
+                                },
+                                {
+                                  name: "Olga Maier",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Sophia(Sonja) Maier (Peter)",
+                            },
+                            {
+                              name: "Artur Maier (Peter)",
+                              children: [
+                                {
+                                  name: "Eduard Maier",
+                                },
+                                {
+                                  name: "Viktoria Maier",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Alexander Maier (Peter)",
+                              children: [
+                                {
+                                  name: "Waldemar Maier",
+                                },
+                                {
+                                  name: "Werner Maier",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Anton Maier (Peter)",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Maria Maier (Hahn)",
+                          children: [
+                            {
+                              name: "Alexander Hahn",
+                            },
+                            {
+                              name: "Erika Hahn",
+                            },
+                            {
+                              name: "Artur Hahn",
+                            },
+                            {
+                              name: "Raida Hahn (Kudenko)",
+                            },
+                            {
+                              name: "Waldemar Hahn",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Alexander Maier (Peter)",
+                          children: [
+                            {
+                              name: "Viktor Maier (Alexander)",
+                              children: [
+                                {
+                                  name: "Alexander Maier (Viktor)",
+                                },
+                                {
+                                  name: "Nikolaj Maier (Viktor)",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Ella Maier (Alexander)",
+                            },
+                            {
+                              name: "Alexander Maier (Alexander)",
+                            },
+                            {
+                              name: "Maria Maier (Alexander)",
+                            },
+                            {
+                              name: "Rudolf Maier (Alexander)",
+                            },
+                            {
+                              name: "Waldemar Maier (Alexander)",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Anton Maier (Peter)",
+                          children: [
+                            {
+                              name: "Viktor Maier (Anton)",
+                              children: [
+                                {
+                                  name: "Elena Maier (Unger)",
+                                  children: [
+                                    {
+                                      name: "Maria-Nadia Unger",
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Viktor Maier (Viktor)",
+                                  children: [{}, {}],
+                                },
+                                {
+                                  name: "Galina Maier (Viktor)",
+                                  children: [
+                                    {
+                                      name: "Viktor",
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              name: "Vladimir Maier (Anton)",
+                            },
+                            {
+                              name: "Alexander Maier (Anton)",
+                            },
+                            {
+                              name: "Maria Maier (Anton)",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Viktoria Hermann (Maier)",
+                          children: [
+                            {
+                              name: "Alexander Hermann",
+                              children: [
+                                {
+                                  name: "Vladimir Hermann",
+                                  children: [
+                                    {
+                                      name: "Violetta Hermann",
+                                    },
+                                    {
+                                      name: "Maxim Hermann (Vladimir)",
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Juri Hermann",
+                                  children: [
+                                    {
+                                      name: "Vladislav Hermann",
+                                    },
+                                    {
+                                      name: "Michael Hermann",
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                            {
+                              name: "Viktor Hermann",
+                              children: [
+                                {
+                                  name: "Viktoria Hermann",
+                                  children: [{ name: "Maxim Hermann" }],
+                                },
+                                {
+                                  name: "Olga Hermann",
+                                  children: [
+                                    {
+                                      name: "Kamischa Hermann",
+                                    },
+                                    {
+                                      name: "Elisa Hermann",
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      name: "Nikolaus Maier",
+                    },
+                    {
+                      name: "Barbara Maier",
+                    },
+                    {
+                      name: "Michael Maier",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        };
+
+        // Объект с информацией о каждом узле
+        const nodeInfo = {
+          "Nikolaus Maier": {
+            text: "Майер Николай / Nikolaus-Bartel Maier. Годы жизни: ок. 1842-1913. Был женат на Екатерине Майер (ур. Гунгер) / Katharina Hunger, 1845-1933. В актах о регистрации брак ( о венчании в церкви) существует такая запись № 64: 29 октября 1763 года патером Антоном Рудницким венчались Николаус (патер поляк и записал имя как Микола) Майер, 21 год. Родители Бартоломей Майер и Барбара Штерцер,и Катарина Гунгер, 18 лет. Родители Андреас Гунгер и Анна Мария Круг. Свидетели Филипп и Иосиф Геррманн.,  Предположительно, годы жизни прошли в с. Мариенталь Саратовской области. К сожалению соответствующие документы мной пока не найдены.",
+						images: ["./source/images1/Maier/Meier-Hunger 29.10.1863.jpg",],
+          },
+          "Peter Maier": {
+            text: "Майер Петр Николаевич / Peter Maier. Годы жизни 07.06.1878 (с. Мариенталь Саратовской области)-02.12.1955 (Степной Кучук, Родинский район Алтайского края). Родился Петр в селе Мариенталь(раньше Тонкошуровка) 7 июня 1878 года, крещен в тонкошуровской католической церкви 8 июня 1878 года священником Петером Глассманном, о чем в актах о крещенных имеется запись № записи 113: 7 июня 1878 года родился, 8 июня крещен священником Петером Глассманном младенец Петер. Родители Николаус Майер м Катарина Гунгер. Восприемники (крестные) Петер Гунгер и Марианна Штерцер. С 1896 года был женат на Сабине Яковлевне Майер, в девичестве Зандер ( 17.02.1880-21.09.1957). В семье было 8 детей. Старший - Семен Майер / Simon Maier (1904-1974), был женат на Берте Майер(Бокслер) / Bertha Maier(Boxler) 23.02.1908-21.07.1981, потом Марта(Мария) Майер(Гунгер) 27.12.1906-21.09.1967, замужем за Петром Гунгер / Peter Hunger 09.03.1901-19.01.1985, потом был Петр Майер / Peter Maier 28.10.1910-25.03.1985 женат на Емме Вольф / Emma Wolf 18.08.1911-07.08.1995, потом была Мария / Maria Maier(Hahn) 09.02.1913-16.11.2006 замужем за Генрихом Ган / Heinrich Hahn 1910-??, после родился Александр / Alexander 28.07.1915-03.06.1993 был женат на Олинде / Olinda Maier 07.08.1916-29.10.1974. Через 3 года родился Антон / Anton 12.04.1918-23.04.1988, был женат на Полине (Зиберт) / Polina(Paulina) Siebert 08.05.1919-26.01.2004, возможно был дважды женат, точных сведений нет. Потом родилась Виктория(Герман) / Viktoria(Hermann) 15.03.1921.21.12.2007 была замужем за Петром Герман / Peter Hermann 10.06.1918-21.03.2000. После Виктории был еще Йоган (Johan), который умер в младенчестве.",
+            images: [
+              "./source/images1/Peter Maier (Nikolaus)/Meier Peter 7.06.1878.jpg",
+              "./source/images1/Peter Maier (Nikolaus)/Geburtsurkunde_Peter_Maier.jpg",
+              "./source/images1/Peter Maier (Nikolaus)/Archiv_1.jpg",
+              "./source/images1/Peter Maier (Nikolaus)/свидетельство_о_смерти,Майер_Петр_Николаевич.jpg",
+              "./source/images1/Peter Maier (Nikolaus)/Bescheid_Sabina_Maier.jpg",
+            ],
+          },
+
+					"Simon Maier": {
+						text: "Семен Петрович Майер / Simon Maier. Годы жизни: 16.07.1904 - 17.03.1974. ",
+					},
+					"Ewald Maier (Simon)": {
+						text: "Майер Эвальд Семенович / Ewald Maier, 16.07.1904(с.Мариенталь) - 17.03.1974. ..."
+					},
+
+					"Viktor Maier (Simon)": {
+						text: "Майер Виктор Семенович / Viktor Maier, годы жизни: 13.12.1928-..."
+					},
+
+					"Jurij Maier": {
+						text: "Майер Юрий Викторович / Jurij Maier, годы жизни: 06.03.1953 - 17.07.2003"
+					},
+
+					"Ludmila Maier (Klassen)": {
+						text: "Майер(Классен) Людмила Викторовна / Ludmila Maier (Klassen), родилась 17.01.1955 года"
+					},
+
+					"Waldemar Maier (Simon)": {
+						text: "Майер Владимир Викторович / Waldemar Maier, ..."
+					},
+
+					"Marta Maier (Hunger)": {
+						text: "Майер(зам. Гунгер) Марта Петровна / Marta Maier(Hunger), годы жизни: 27.12.1906-21.09.1967"
+					},
+
+          "Viktoria Hermann (Maier)": {
+            text: "Герман (Майер) Виктория Петровна / Viktoria Hermann (Maier)...",
+            images: [
+              "./source/images1/Viktoria Hermann(Maier)/Archiv_2.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Archiv_Bescheid_Viktoria_Hermann.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Einbürgerungsurkunde_Viktoria_Hermann.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Geburtsurkunde_Viktoria_Hermann(Maier).jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann_05.12.1972.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann_1.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann_12.06.1966.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann_Bescheid.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann_mit_Freundinen_1965.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Hermann_mit_Sohn_Viktor_1957.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Maier_1938.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Maier_1939.jpg",
+              "./source/images1/Viktoria Hermann(Maier)/Viktoria_Maier_mit_Lidia_Hunger_und_Freundinen.jpg",
+            ],
+          },
+
+					"Alexander Hermann": {
+						url: "./AlexHermann.html"
+					}
+
+					"Viktor Hermann": {
+						text: "Герман Виктор Петрович / Viktor Hermann, 16.11.1954(Воркута) - 05.07.1980(с.Викторовский)",
+					},
+          "Vladimir Hermann": {
+            text: "Герман Владимир Александрович / Vladimir Hermann...",
+            images: [
+              "source/images1/5coOw4GiK3c.jpg",
+              "source/images1/Vladimir Hermann/1980 год_000045.jpg",
+              "source/images1/Vladimir Hermann/20190907_143937.jpg",              
+              "source/images1/Vladimir Hermann/май 1978 года_000042.jpg",
+              "source/images1/Vladimir Hermann/май 1978 года_000043.jpg",
+							"./source/images1/Vladimir Hermann/Vladimir_Hermann_in_Wiktorowskij.jpg"
+            ],
+            url: "Vladimir.html",
+          },
+          "Viktor Maier (Simon)": {
+            text: "Майер Виктор Семенович / Viktor Maier",
+            pdf: ["./source/images1/Viktor Simon Maier/Viktor Maier.pdf"],
+          },
+          "Erna Hunger": {
+            text: "Герман (Гунгер) Эрна Петровна / Erna Hermann (Hunger). Родилась 17.10.1951-го года Тисульский район Кемеровской области. ",
+            images: ["./source/images1/Эрна Гунгер/Эрна Гунгер.jpeg",
+							"./source/images1/Эрна Гунгер/Гунгер Мария-Марта Петровна.jpeg"
+						],
+          },
+          "Adolf Hunger": {
+            text: "Гунгер Адольф Петрович / Adolf Hunger",
+            images: [
+              "./source/images1/Гунгер Адольф Петрович/WhatsApp Image 2024-10-24 at 11.37.03 (1).jpeg",
+              "./source/images1/Гунгер Адольф Петрович/WhatsApp Image 2024-10-24 at 11.37.03 (2).jpeg",
+            ],
+          },
+          // Добавьте остальные узлы с информацией и массивами изображений
+        };
+
+        function updateSize() {
+          // Скрываем окно node-info при загрузке
+          document.getElementById("node-info").style.display = "none";
+
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+          const margin = { top: 20, right: 100, bottom: 100, left: 100 };
+
+          d3.select("svg").attr("width", width).attr("height", height);
+
+          const svg = d3
+            .select("svg")
+            .select("g")
+            .attr(
+              "transform",
+              "translate(" + margin.left + "," + margin.top + ")"
+            );
+
+          const root = d3.hierarchy(data);
+          const treeLayout = d3
+            .tree()
+            .size([
+              height - margin.top - margin.bottom,
+              width - margin.left - margin.right,
+            ]);
+          treeLayout(root);
+
+          svg.selectAll(".link").remove();
+          svg.selectAll(".node").remove();
+
+          // Создание связей (линий)
+          svg
+            .selectAll(".link")
+            .data(root.links())
+            .enter()
+            .append("path")
+            .attr("class", "link")
+            .attr(
+              "d",
+              d3
+                .linkHorizontal()
+                .x((d) => width - margin.right - margin.left - d.y)
+                .y((d) => d.x)
+            )
+            .attr("stroke", "#ccc")
+            .attr("fill", "none")
+            .attr("stroke-width", 2);
+
+          const nodes = svg
+            .selectAll(".node")
+            .data(root.descendants())
+            .enter()
+            .append("g")
+            .attr("class", "node")
+            .attr(
+              "transform",
+              (d) =>
+                `translate(${width - margin.right - margin.left - d.y},${
+                  d.x
+                }) scale(0.9)`
+            );
+
+          // Создаем узлы-круги с событиями
+          nodes
+            .append("circle")
+            .attr("r", 5)
+            .on("mouseover", (event, d) => showTooltip(event, d.data.name)) // При наведении
+            .on("mouseout", hideTooltip) // При уходе мыши
+            .on("click", (event, d) => showNodeInfo(d.data.name));
+
+          nodes
+            .append("text")
+            .attr("dy", 3)
+            .attr("x", (d) => (d.children ? 15 : -15))
+            .style("text-anchor", (d) => (d.children ? "start" : "end"))
+            .style("font-size", "11px")
+            .text((d) => d.data.name);
+
+          let currentImageIndex = 0; // Текущий индекс изображения
+          let currentNodeImages = []; // Массив изображений текущего узла
+
+          function showNodeInfo(name) {
+            const info = nodeInfo[name];
+
+            if (info && info.url) {
+              window.open(info.url, "_blank");
+            } else {
+              openModalWindow(info, name);
+            }
+          }
+
+          function openModalWindow(info, name) {
+            const nodeInfoContainer = document.getElementById("node-info");
+            const nodeNameElem = document.getElementById("node-name");
+            const nodeDetailsElem = document.getElementById("node-details");
+            const nodeImageElem = document.getElementById("node-image");
+            const nodePdfElem = document.getElementById("node-pdf"); // Элемент для PDF
+
+            nodeNameElem.textContent = name;
+            nodeDetailsElem.textContent = info
+              ? info.text
+              : "Информация не найдена.";
+
+            currentNodeImages = info && info.images ? info.images : [];
+            currentImageIndex = 0;
+            updateImage();
+
+            nodePdfElem.innerHTML = ""; // Очищаем предыдущий список PDF
+            // Установка PDF-документов
+            if (info && info.pdf && info.pdf.length > 0) {
+              info.pdf.forEach((pdfUrl, index) => {
+                const pdfLink = document.createElement("a");
+                pdfLink.href = pdfUrl;
+                pdfLink.target = "_blank"; // Открытие в новой вкладке
+                pdfLink.textContent = `Открыть PDF - Часть ${index + 1}`;
+                pdfLink.style.display = "block"; // Каждая ссылка на новой строке
+                nodePdfElem.appendChild(pdfLink);
+              });
+            }
+            // Показать модальное окно
+            nodeInfoContainer.style.display = "block";
+
+            nodeImageElem.onclick = function () {
+              showLargeImage(this.src);
+            };
+          }
+
+          function updateImage() {
+            const nodeImageElem = document.getElementById("node-image");
+            if (currentNodeImages.length > 0) {
+              nodeImageElem.src = currentNodeImages[currentImageIndex];
+              nodeImageElem.style.display = "block";
+            } else {
+              nodeImageElem.style.display = "none";
+            }
+          }
+
+          function showNextImage() {
+            if (currentNodeImages.length > 0) {
+              currentImageIndex =
+                (currentImageIndex + 1) % currentNodeImages.length;
+              updateImage();
+            }
+          }
+
+          function showPrevImage() {
+            if (currentNodeImages.length > 0) {
+              currentImageIndex =
+                (currentImageIndex - 1 + currentNodeImages.length) %
+                currentNodeImages.length;
+              updateImage();
+            }
+          }
+
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", showNextImage);
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", showPrevImage);
+
+          function showTooltip(event, name) {
+            const tooltip = d3.select("#tooltip");
+            tooltip
+              .style("display", "block")
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY + 10 + "px")
+              .text(`Информация о: ${name}`);
+          }
+
+          function hideTooltip() {
+            d3.select("#tooltip").style("display", "none");
+          }
+        }
+
+        function closeNodeInfo() {
+          document.getElementById("node-info").style.display = "none";
+        }
+
+        function showLargeImage(src) {
+          const largeImageContainer = document.getElementById(
+            "large-image-container"
+          );
+          const largeImage = document.getElementById("large-image");
+
+          largeImage.src = src;
+          largeImageContainer.style.display = "block";
+        }
+
+        function closeLargeImage() {
+          document.getElementById("large-image-container").style.display =
+            "none";
+        }
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3
+          .select("body")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .append("g");
+
+        window.addEventListener("resize", updateSize);
+        updateSize();
+      </script>
+    </section>
+
+    <section class="contacts">
+      <div class="container">
+        <h2 class="contacts-title">Контакты</h2>
+
+        <div class="messengers">
+          <a href="https://t.me/vlad170411" target="_blank" class="messenger">
+            <img src="./source/icons/telegram.svg" alt="Telegram" />Написать в
+            Telegram
+          </a>
+
+          <a
+            href="https://wa.me/4917621903639"
+            target="_blank"
+            class="messenger"
+          >
+            <img src="./source/icons/whatsapp.svg" alt="WhatsApp" />Отправить в
+            WhatsApp
+          </a>
+
+          <a
+            href="https://vk.me/youraccountname"
+            target="_blank"
+            class="messenger"
+          >
+            <img src="./source/icons/vk.svg" alt="Вконтакте" />Связаться
+            Вконтакте
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-inner">
+          <p>© Владимир Герман <br />2024 Фрайбург (Германия)</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

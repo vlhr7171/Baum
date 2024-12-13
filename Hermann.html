@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./source/style/reset.css" />
+    <link rel="stylesheet" href="./source/style/test1.css" />
+  </head>
+  <body>
+    <div class="example">
+      <ul id="nav">
+        <li>
+          <a href="./index.html">Главная</a>
+          <ul>
+            <li>
+              <a href="./Hermann.html">Герман</a>
+            </li>
+            <li><a href="./Maier.html">Майер</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="./Hermann.html">Герман</a>
+
+          <!-- <ul>
+            <li>
+              <a href="#">XXXX</a>
+              <ul>
+                <li><a href="#">XXXX</a></li>
+                <li><a href="#">XXXX</a></li>
+              </ul>
+            </li>
+            <li><a href="#">XXXX</a></li>
+            <li><a href="#">XXXX</a></li>
+          </ul> -->
+        </li>
+        <li>
+          <a href="./Maier.html">Майер</a>
+          <!-- <ul>
+            <li>
+              <a href="#">Галерея</a>
+              <ul>
+                <li><a href="#">Animation</a></li>
+              </ul>
+            </li>
+          </ul> -->
+        </li>
+
+        <li><a href="./Vladimir.html">Обо мне</a></li>
+      </ul>
+    </div>
+    <!-- Всплывающее окно для информации об узле -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <div id="node-info">
+      <!-- Кнопка закрытия -->
+      <button
+        onclick="closeNodeInfo()"
+        style="
+          position: absolute;
+          top: 5px;
+          right: 5px;
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          font-weight: bold;
+          cursor: pointer;
+          color: #666;
+        "
+      >
+        X
+      </button>
+
+      <!-- Имя узла -->
+      <h2 id="node-name"></h2>
+
+      <!-- Карусель для изображений -->
+      <div id="carousel" style="margin-bottom: 20px">
+        <button id="prev-btn" onclick="showPrevImage()">‹</button>
+        <img
+          id="node-image"
+          src=""
+          alt="Фото"
+          style="width: 50%; height: auto; display: block; margin-bottom: 10px"
+        />
+        <button id="next-btn" onclick="showNextImage()">›</button>
+      </div>
+
+      <!-- Большое изображение (модальное окно) -->
+      <div
+        id="large-image-container"
+        style="
+          position: absolute;
+          top: 20px;
+          left: 20px;
+          padding: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          border: 1px solid #ddd;
+          display: none;
+          z-index: 1000;
+        "
+      >
+        <button
+          onclick="closeLargeImage()"
+          style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            color: white;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+          "
+        >
+          X
+        </button>
+        <img
+          id="large-image"
+          src=""
+          alt="Большое изображение"
+          style="max-width: 100%; max-height: 80vh; display: block"
+        />
+      </div>
+
+      <!-- Подробная информация -->
+      <p id="node-details"></p>
+
+      <!-- Ссылки на PDF -->
+      <div id="node-pdf" style="margin-top: 20px">
+        <!-- Здесь будут динамически добавляться ссылки на PDF -->
+      </div>
+    </div>
+
+    <section>
+      <script src="https://d3js.org/d3.v6.min.js"></script>
+      <script>
+        // Структура данных
+        const data = {
+          name: "Konrad Hermann",
+          children: [
+            {
+              name: "Niсkolaus Hermann",
+            },
+            {
+              name: "Magdalena Hermann",
+            },
+            {
+              name: "Johann Peter Hermann",
+              children: [
+                {
+                  name: "Niсkolaus Hermann",
+                },
+                {
+                  name: "Jakob Hermann",
+                  children: [
+                    {
+                      name: "Anna-Barbara Hermann",
+                    },
+                    {
+                      name: "Elisabeth Hermann",
+                    },
+                    {
+                      name: "Katharina Hermann (Pfanenstiel)",
+                    },
+                    {
+                      name: "Anna-Margaret Hermann (Asselborn)",
+                    },
+                    {
+                      name: "Johannes Hermann",
+                    },
+                    {
+                      name: "Johann-Peter Hermann",
+                    },
+                    {
+                      name: "Peter Hermann",
+                    },
+                    {
+                      name: "Jakob Hermann",
+                    },
+                    {
+                      name: "Johann-Georg Hermann",
+                    },
+                    {
+                      name: "Andreas Hermann",
+                    },
+                    {
+                      name: "Niсkolaus Hermann",
+                      children: [
+                        {
+                          name: "Johannes Hermann",
+                        },
+                        {
+                          name: "Heinrich Hermann",
+                        },
+                        {
+                          name: "Anton Hermann",
+                        },
+                        {
+                          name: "Katharina Hermann",
+                        },
+                        {
+                          name: "Johann Peter Hermann",
+                          children: [
+                            {
+                              name: "Barbara Hermann",
+                            },
+                            {
+                              name: "Margaretha Hermann",
+                            },
+                            {
+                              name: "Anton Hermann",
+                            },
+                            {
+                              name: "Peter Hermann",
+                            },
+                            {
+                              name: "Katharina Hermann",
+                            },
+                            {
+                              name: "Joseph Hermann",
+                            },
+                            {
+                              name: "Nikolaus Hermann",
+                              children: [
+                                {
+                                  name: "Maria Hermann (Hanzen)",
+                                  children: [
+                                    {
+                                      name: "hhh",
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Josef Hermann",
+                                },
+                                {
+                                  name: "Wera(Bertha) Hermann (Beil)",
+                                },
+                                {
+                                  name: "Peter Hermann",
+                                  children: [
+                                    {
+                                      name: "Alexander Hermann",
+                                      children: [
+                                        {
+                                          name: "Vladimir Hermann",
+
+                                          children: [
+                                            {
+                                              name: "Violetta Hermann",
+                                            },
+                                            {
+                                              name: "Maxim Hermann",
+                                            },
+                                          ],
+                                        },
+                                        {
+                                          name: "Juri Hermann",
+                                          children: [
+                                            {
+                                              name: "Vladislav Hermann",
+                                            },
+                                            {
+                                              name: "Michael Hermann",
+                                            },
+                                          ],
+                                        },
+                                      ],
+                                    },
+                                    {
+                                      name: "Viktor Hermann",
+                                      children: [
+                                        {
+                                          name: "Viktoria Hermann",
+                                          children: [
+                                            {
+                                              name: "Maxim Hermann",
+                                            },
+                                          ],
+                                        },
+                                        {
+                                          name: "Olga Hermann",
+                                          children: [
+                                            {
+                                              name: "Kamischa Hermann",
+                                            },
+                                            {
+                                              name: "Elisa Hermann",
+                                            },
+                                          ],
+                                        },
+                                      ],
+                                    },
+                                  ],
+                                },
+                                {
+                                  name: "Pius Hermann",
+                                },
+                              ],
+                            },
+                            {
+                              name: "Anna Hermann",
+                            },
+                          ],
+                        },
+                        {
+                          name: "Anna-Maria Hermann",
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  name: "Johannes-Peter Hermann",
+                },
+                {
+                  name: "Christina Hermann (Kinderknecht)",
+                },
+                {
+                  name: "Bartholomeus Hermann",
+                },
+                {
+                  name: "Anna-Barbara Hermann (Quint)",
+                },
+                {
+                  name: "Peter Hermann",
+                },
+              ],
+            },
+            {
+              name: "Johann-Heinrich Hermann",
+            },
+            {
+              name: "Simon Hermann",
+            },
+          ],
+        };
+        // Объект с информацией о каждом узле
+        const nodeInfo = {
+          "Viktor Hermann": {
+            text: "Герман Виктор Петрович / Viktor Hermann, 16.11.1954(Воркута) - 05.07.1980(с.Викторовский)",
+          },
+          "Vladimir Hermann": {
+            text: "Герман Владимир Александрович / Vladimir Hermann...",
+            images: [
+              "source/images1/Vladimir Hermann//5coOw4GiK3c.jpg",
+              "source/images1/Vladimir Hermann//_000033.jpg",
+              "source/images1/Vladimir Hermann//20190907_143937.jpg",
+              "source/images1/Vladimir Hermann//1980 год_000045.jpg",
+              "source/images1/Vladimir Hermann//май 1978 года_000042.jpg",
+              "source/images1/Vladimir Hermann//май 1978 года_000043.jpg",
+            ],
+            url: "./Vladimir.html",
+          },
+					"Alexander Hermann": {
+						url: "./AlexHermann.html"
+					}
+          // Добавьте остальные узлы с информацией и массивами изображений
+        };
+
+        function updateSize() {
+          // Скрываем окно node-info при загрузке
+          document.getElementById("node-info").style.display = "none";
+
+          const width = window.innerWidth;
+          const height = window.innerHeight;
+          const margin = { top: 20, right: 100, bottom: 100, left: 100 };
+
+          d3.select("svg").attr("width", width).attr("height", height);
+
+          const svg = d3
+            .select("svg")
+            .select("g")
+            .attr(
+              "transform",
+              "translate(" + margin.left + "," + margin.top + ")"
+            );
+
+          const root = d3.hierarchy(data);
+          const treeLayout = d3
+            .tree()
+            .size([
+              height - margin.top - margin.bottom,
+              width - margin.left - margin.right,
+            ]);
+          treeLayout(root);
+
+          svg.selectAll(".link").remove();
+          svg.selectAll(".node").remove();
+
+          // Создание связей (линий)
+          svg
+            .selectAll(".link")
+            .data(root.links())
+            .enter()
+            .append("path")
+            .attr("class", "link")
+            .attr(
+              "d",
+              d3
+                .linkHorizontal()
+                .x((d) => width - margin.right - margin.left - d.y)
+                .y((d) => d.x)
+            )
+            .attr("stroke", "#ccc")
+            .attr("fill", "none")
+            .attr("stroke-width", 2);
+
+          const nodes = svg
+            .selectAll(".node")
+            .data(root.descendants())
+            .enter()
+            .append("g")
+            .attr("class", "node")
+            .attr(
+              "transform",
+              (d) =>
+                `translate(${width - margin.right - margin.left - d.y},${
+                  d.x
+                }) scale(0.9)`
+            );
+
+          // Создаем узлы-круги с событиями
+          nodes
+            .append("circle")
+            .attr("r", 5)
+            .on("mouseover", (event, d) => showTooltip(event, d.data.name)) // При наведении
+            .on("mouseout", hideTooltip) // При уходе мыши
+            .on("click", (event, d) => showNodeInfo(d.data.name));
+
+          nodes
+            .append("text")
+            .attr("dy", 3)
+            .attr("x", (d) => (d.children ? 15 : -15))
+            .style("text-anchor", (d) => (d.children ? "start" : "end"))
+            .style("font-size", "11px")
+            .text((d) => d.data.name);
+
+          let currentImageIndex = 0; // Текущий индекс изображения
+          let currentNodeImages = []; // Массив изображений текущего узла
+
+          function showNodeInfo(name) {
+            const info = nodeInfo[name];
+
+            if (info && info.url) {
+              window.open(info.url, "_blank");
+            } else {
+              openModalWindow(info, name);
+            }
+          }
+
+          function openModalWindow(info, name) {
+            const nodeInfoContainer = document.getElementById("node-info");
+            const nodeNameElem = document.getElementById("node-name");
+            const nodeDetailsElem = document.getElementById("node-details");
+            const nodeImageElem = document.getElementById("node-image");
+            const nodePdfElem = document.getElementById("node-pdf"); // Элемент для PDF
+
+            nodeNameElem.textContent = name;
+            nodeDetailsElem.textContent = info
+              ? info.text
+              : "Информация не найдена.";
+
+            currentNodeImages = info && info.images ? info.images : [];
+            currentImageIndex = 0;
+            updateImage();
+
+            nodePdfElem.innerHTML = ""; // Очищаем предыдущий список PDF
+            // Установка PDF-документов
+            if (info && info.pdf && info.pdf.length > 0) {
+              info.pdf.forEach((pdfUrl, index) => {
+                const pdfLink = document.createElement("a");
+                pdfLink.href = pdfUrl;
+                pdfLink.target = "_blank"; // Открытие в новой вкладке
+                pdfLink.textContent = `Открыть PDF - Часть ${index + 1}`;
+                pdfLink.style.display = "block"; // Каждая ссылка на новой строке
+                nodePdfElem.appendChild(pdfLink);
+              });
+            }
+            // Показать модальное окно
+            nodeInfoContainer.style.display = "block";
+
+            nodeImageElem.onclick = function () {
+              showLargeImage(this.src);
+            };
+          }
+
+          function updateImage() {
+            const nodeImageElem = document.getElementById("node-image");
+            if (currentNodeImages.length > 0) {
+              nodeImageElem.src = currentNodeImages[currentImageIndex];
+              nodeImageElem.style.display = "block";
+            } else {
+              nodeImageElem.style.display = "none";
+            }
+          }
+
+          function showNextImage() {
+            if (currentNodeImages.length > 0) {
+              currentImageIndex =
+                (currentImageIndex + 1) % currentNodeImages.length;
+              updateImage();
+            }
+          }
+
+          function showPrevImage() {
+            if (currentNodeImages.length > 0) {
+              currentImageIndex =
+                (currentImageIndex - 1 + currentNodeImages.length) %
+                currentNodeImages.length;
+              updateImage();
+            }
+          }
+
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", showNextImage);
+          document
+            .getElementById("prev-btn")
+            .addEventListener("click", showPrevImage);
+
+          function showTooltip(event, name) {
+            const tooltip = d3.select("#tooltip");
+            tooltip
+              .style("display", "block")
+              .style("left", event.pageX + 10 + "px")
+              .style("top", event.pageY + 10 + "px")
+              .text(`Информация о: ${name}`);
+          }
+
+          function hideTooltip() {
+            d3.select("#tooltip").style("display", "none");
+          }
+        }
+
+        function closeNodeInfo() {
+          document.getElementById("node-info").style.display = "none";
+        }
+
+        function showLargeImage(src) {
+          const largeImageContainer = document.getElementById(
+            "large-image-container"
+          );
+          const largeImage = document.getElementById("large-image");
+
+          largeImage.src = src;
+          largeImageContainer.style.display = "block";
+        }
+
+        function closeLargeImage() {
+          document.getElementById("large-image-container").style.display =
+            "none";
+        }
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const svg = d3
+          .select("body")
+          .append("svg")
+          .attr("width", width)
+          .attr("height", height)
+          .append("g");
+
+        window.addEventListener("resize", updateSize);
+        updateSize();
+      </script>
+    </section>
+
+    <section class="contacts">
+      <div class="container">
+        <h2 class="contacts-title">Контакты</h2>
+
+        <div class="messengers">
+          <a href="https://t.me/vlad170411" target="_blank" class="messenger">
+            <img src="./source/icons/telegram.svg" alt="Telegram" />Написать в
+            Telegram
+          </a>
+
+          <a
+            href="https://wa.me/4917621903639"
+            target="_blank"
+            class="messenger"
+          >
+            <img src="./source/icons/whatsapp.svg" alt="WhatsApp" />Отправить в
+            WhatsApp
+          </a>
+
+          <a
+            href="https://vk.me/youraccountname"
+            target="_blank"
+            class="messenger"
+          >
+            <img src="./source/icons/vk.svg" alt="Вконтакте" />Связаться
+            Вконтакте
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-inner">
+          <p>© Владимир Герман <br />2024 Фрайбург (Германия)</p>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
